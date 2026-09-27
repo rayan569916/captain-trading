@@ -1,0 +1,76 @@
+<section class="bg-fog pb-10 pt-12 sm:pt-16">
+  <div class="container-x">
+    <p class="mb-3 text-sm font-semibold text-slate">
+      <a routerLink="/" class="no-underline hover:underline">Home</a> / Products
+      @if (activeCategory(); as c) { / {{ c.name }} }
+    </p>
+    <h1 class="display text-[clamp(40px,7vw,89px)]">{{ activeCategory()?.name ?? 'All products' }}</h1>
+    <p class="mt-4 max-w-[56ch] text-[17px]">
+      {{ activeCategory()?.blurb ?? 'Glass, glass hardware, construction materials and glue guns at trade prices. Add items to your quote list and we will confirm stock and delivery within one working day.' }}
+    </p>
+
+    <!-- Segmented category control -->
+    <div class="mt-8 flex gap-1 overflow-x-auto rounded-full bg-paper p-1 shadow-[var(--shadow-ring)] sm:inline-flex" role="group" aria-label="Category">
+      <button type="button" (click)="setParams({ category: null })"
+              class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition"
+              [class.bg-gold]="!activeCategory()" [class.text-forest]="!activeCategory()" [class.text-charcoal]="!!activeCategory()"
+              [attr.aria-pressed]="!activeCategory()">All · {{ totalCount }}</button>
+      @for (c of categories; track c.slug) {
+        <button type="button" (click)="setParams({ category: c.slug })"
+                class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition"
+                [class.bg-gold]="activeCategory()?.slug === c.slug" [class.text-forest]="activeCategory()?.slug === c.slug"
+                [class.text-charcoal]="activeCategory()?.slug !== c.slug"
+                [attr.aria-pressed]="activeCategory()?.slug === c.slug">{{ c.short }} · {{ countFor(c.slug) }}</button>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="container-x py-10">
+  <!-- Toolbar -->
+  <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-center">
+    <div class="relative flex-1">
+      <label for="product-search" class="sr-only">Search products</label>
+      <app-icon name="search" class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-pebble" />
+      <input id="product-search" type="search" class="input pl-11" placeholder="Search by name, SKU or country"
+             [value]="term()" (input)="onSearch($any($event.target).value)">
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <label class="inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-forest shadow-[var(--shadow-ring)]">
+        <input type="checkbox" class="size-4 accent-[var(--color-forest)]" [checked]="inStockOnly()"
+               (change)="setParams({ stock: $any($event.target).checked ? '1' : null })">
+        In stock only
+      </label>
+      <label for="sort" class="sr-only">Sort</label>
+      <select id="sort" class="input w-auto py-3 pr-10 text-sm font-semibold"
+              (change)="setParams({ sort: $any($event.target).value === 'featured' ? null : $any($event.target).value })">
+        <option value="featured" [selected]="sortKey() === 'featured'">Best sellers first</option>
+        <option value="price-asc" [selected]="sortKey() === 'price-asc'">Price: low to high</option>
+        <option value="price-desc" [selected]="sortKey() === 'price-desc'">Price: high to low</option>
+        <option value="name" [selected]="sortKey() === 'name'">Name A–Z</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="mb-5 text-sm font-medium text-slate" aria-live="polite">
+    {{ results().length }} {{ results().length === 1 ? 'product' : 'products' }}
+    @if (term()) { matching “{{ term() }}” }
+  </p>
+
+  @if (results().length) {
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (p of results(); track p.id) {
+        <app-product-card [product]="p" />
+      }
+    </div>
+  } @else {
+    <div class="rounded-[28px] bg-fog px-6 py-16 text-center">
+      <h2 class="mb-2 text-2xl font-bold">No products match those filters</h2>
+      <p class="mx-auto mb-6 max-w-[44ch] text-slate">Try a shorter search, or clear the filters. If you can't find an item, send us the spec and we'll source it.</p>
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-3">
+        <button type="button" class="btn btn-gold" (click)="clearFilters()">Clear filters</button>
+        <a routerLink="/contact" class="link self-center">Ask us to source it</a>
+      </div>
+    </div>
+  }
+</section>

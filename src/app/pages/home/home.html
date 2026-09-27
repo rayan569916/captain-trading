@@ -1,0 +1,274 @@
+<!-- HERO -->
+<section class="pt-12 text-center sm:pt-16">
+  <div class="container-x">
+    <h1 class="display mx-auto max-w-[14ch] text-[clamp(46px,8.6vw,108px)]">Build with materials you can trust</h1>
+    <p class="mx-auto mt-6 max-w-[42ch] text-[clamp(17px,1.6vw,20px)]">
+      Architectural glass, glass hardware, construction materials and glue guns from {{ company.stats[1].value }} partner factories.
+      Trade prices, delivered across Saudi Arabia.
+    </p>
+
+    <form (submit)="submitSearch($event)" role="search"
+          class="mx-auto mt-8 flex max-w-[560px] items-center gap-2 rounded-full bg-paper p-1.5 shadow-[var(--shadow-ring)] focus-within:shadow-[0_0_0_2px_var(--color-forest)]">
+      <label for="hero-search" class="sr-only">Search products</label>
+      <app-icon name="search" class="ml-3 text-pebble" />
+      <input id="hero-search" type="search" [value]="search()" (input)="search.set($any($event.target).value)"
+             placeholder="Try “tempered glass”, “cement” or “glue gun”"
+             class="min-w-0 flex-1 bg-transparent py-2 text-base text-obsidian outline-none placeholder:text-pebble">
+      <button type="submit" class="btn btn-gold">Search</button>
+    </form>
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+      <a routerLink="/products" class="link">Browse all products</a>
+      <a routerLink="/contact" class="link">Request a bulk quote</a>
+    </div>
+  </div>
+
+  <!-- Hero photo (real image instead of animation) -->
+  <div class="container-x mt-12">
+    <div class="relative overflow-hidden rounded-[28px] bg-fog">
+      <img [src]="img.heroWarehouse" alt="Racks of stock in a large distribution warehouse"
+           class="h-[clamp(280px,46vw,560px)] w-full object-cover" fetchpriority="high">
+      <div class="absolute bottom-4 left-4 right-4 flex flex-wrap items-center gap-3 rounded-full bg-paper/95 p-2 pr-5 text-left shadow-[var(--shadow-lift)] sm:left-6 sm:right-auto sm:bottom-6">
+        <span class="grid size-10 place-items-center rounded-full bg-gold text-forest"><app-icon name="truck" /></span>
+        <div class="leading-tight">
+          <p class="text-[15px] font-semibold text-obsidian">400 bags OPC cement · Riyadh</p>
+          <p class="text-xs text-slate">Order CT-10482 · Out for delivery (sample)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust row -->
+  <div class="container-x">
+    <div class="grid gap-8 py-12 text-left md:grid-cols-3 md:py-16">
+      <div>
+        <div class="icon-ring mb-5"><app-icon name="factory" /></div>
+        <h3 class="mb-1.5 text-lg font-semibold">Factory-direct prices</h3>
+        <p class="text-base text-slate">We buy straight from manufacturers in {{ company.origins.length }} countries, so there is no importer markup in between.</p>
+      </div>
+      <div>
+        <div class="icon-ring mb-5"><app-icon name="truck" /></div>
+        <h3 class="mb-1.5 text-lg font-semibold">Delivered by Captain Cargo</h3>
+        <p class="text-base text-slate">Next-day delivery in Riyadh and 2–4 days to every other city, with <a href="https://www.captaincargo.co" target="_blank" rel="noopener" class="font-semibold text-forest underline underline-offset-2">Captain Cargo</a> trucks.</p>
+      </div>
+      <div>
+        <div class="icon-ring mb-5"><app-icon name="badge" /></div>
+        <h3 class="mb-1.5 text-lg font-semibold">Certified stock</h3>
+        <p class="text-base text-slate">Test certificates and data sheets come with every batch of glass, steel and cement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="bg-fog py-16 sm:py-24">
+  <div class="container-x">
+    <div class="mx-auto mb-10 max-w-[720px] text-center">
+      <h2 class="mb-3 text-[clamp(28px,3.4vw,40px)] font-bold leading-tight tracking-[-0.02em]">What we trade</h2>
+      <p class="text-[17px]">Four product lines, one supplier, one invoice. Mix glass, hardware, materials and tools in the same order.</p>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      @for (c of categories; track c.slug) {
+        <a routerLink="/products" [queryParams]="{ category: c.slug }"
+           class="group flex flex-col overflow-hidden rounded-[28px] bg-paper no-underline transition hover:shadow-[var(--shadow-lift)]">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img [src]="c.image" [alt]="c.name" loading="lazy" class="size-full object-cover transition duration-500 group-hover:scale-[1.04]">
+          </div>
+          <div class="flex flex-1 flex-col gap-2 p-5">
+            <h3 class="text-xl font-bold">{{ c.name }}</h3>
+            <p class="text-[15px] text-slate">{{ c.blurb }}</p>
+            <span class="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-semibold text-forest">
+              {{ categoryCount(c.slug) }} products <app-icon name="arrow" [size]="16" class="transition group-hover:translate-x-1" />
+            </span>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- GOLD BAND : bulk price calculator -->
+<section class="bg-gold py-16 text-forest sm:py-24">
+  <div class="container-x grid items-center gap-12 lg:grid-cols-[1fr_minmax(0,460px)]">
+    <div>
+      <h2 class="mb-4 text-[clamp(30px,3.6vw,45px)] font-bold leading-[1.1] tracking-[-0.02em] text-forest">Prices drop as your order grows</h2>
+      <p class="mb-6 max-w-[38ch] text-lg">Order <b class="font-semibold underline underline-offset-4">4× the minimum</b> and save 5%. Order 10× and save 10%. The discount is applied to your quote automatically.</p>
+      <a routerLink="/products" class="btn btn-dark">See all prices</a>
+    </div>
+
+    <div class="rounded-[28px] bg-paper p-6 text-charcoal shadow-[var(--shadow-float)]">
+      <div class="mb-2 flex justify-end">
+        <span class="chip"><app-icon name="shield" [size]="14" />Price held for 7 days</span>
+      </div>
+
+      <div class="rounded-[10px] px-4 py-3 shadow-[inset_0_0_0_1px_var(--color-pebble)] focus-within:shadow-[inset_0_0_0_2px_var(--color-forest)]">
+        <label for="calc-product" class="block text-[13px] text-slate">Product</label>
+        <select id="calc-product" (change)="onCalcProduct($any($event.target).value)"
+                class="w-full bg-transparent py-1 text-base font-semibold text-obsidian outline-none">
+          @for (p of calcProducts; track p.id) {
+            <option [value]="p.id" [selected]="p.id === calcId()">{{ p.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="mt-3 rounded-[10px] px-4 py-3 shadow-[inset_0_0_0_1px_var(--color-pebble)] focus-within:shadow-[inset_0_0_0_2px_var(--color-forest)]">
+        <label for="calc-qty" class="block text-[13px] text-slate">Quantity</label>
+        <div class="flex items-center gap-3">
+          <input id="calc-qty" type="number" inputmode="numeric" [min]="calcProduct().moq" [value]="calcQty()"
+                 (input)="onCalcQty($any($event.target).value)"
+                 class="min-w-0 flex-1 bg-transparent text-[34px] font-black tracking-[-0.04em] text-forest tabular-nums outline-none">
+          <span class="rounded-full bg-fog px-3 py-1.5 text-sm font-semibold text-forest">{{ calcProduct().unit }}</span>
+        </div>
+      </div>
+
+      @if (belowMoq()) {
+        <p class="mt-2 rounded-[10px] bg-gold-soft px-3 py-2 text-[13px] text-forest">Minimum order is {{ calcProduct().moq | number }} {{ calcProduct().unit }}. We've priced it at the minimum.</p>
+      }
+
+      <div class="mt-4 flex flex-wrap gap-2" aria-label="Price tiers">
+        @for (t of calcTiers(); track t.minQty) {
+          <span class="rounded-full px-3 py-1.5 text-xs font-semibold tabular-nums"
+                [class.bg-forest]="$index === calcActiveTier()" [class.text-gold]="$index === calcActiveTier()"
+                [class.bg-fog]="$index !== calcActiveTier()" [class.text-forest]="$index !== calcActiveTier()">
+            {{ t.label }} · {{ t.discount === 0 ? 'List price' : '−' + (t.discount * 100) + '%' }}
+          </span>
+        }
+      </div>
+
+      <dl class="mt-5 grid gap-3 text-sm">
+        <div class="flex items-center justify-between">
+          <dt class="text-slate">Unit price</dt>
+          <dd class="font-semibold text-obsidian tabular-nums">SAR {{ calcUnit() | number: '1.2-2' }} / {{ calcProduct().unit }}</dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-slate">You save</dt>
+          <dd class="font-semibold tabular-nums" [class.text-forest]="calcSaving() > 0">SAR {{ calcSaving() | number: '1.2-2' }}</dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-slate">Lead time</dt>
+          <dd class="font-semibold text-obsidian">{{ calcProduct().leadTime }}</dd>
+        </div>
+        <div class="flex items-end justify-between border-t border-fog pt-3">
+          <dt class="font-semibold text-obsidian">Total before VAT</dt>
+          <dd class="text-[30px] font-black leading-none tracking-[-0.04em] text-forest tabular-nums">SAR {{ calcTotal() | number: '1.2-2' }}</dd>
+        </div>
+      </dl>
+
+      <button type="button" class="btn btn-gold mt-5 w-full" (click)="addCalcToQuote()">
+        {{ calcAdded() ? 'Added to your quote list' : 'Add to quote list' }}
+      </button>
+      @if (calcAdded()) {
+        <p class="mt-2 text-center text-sm"><a routerLink="/quote" class="link">Review your quote</a></p>
+      }
+    </div>
+  </div>
+
+  <!-- Headline + featured products (still on the gold band, like the reference) -->
+  <div class="container-x mt-20 text-center sm:mt-28">
+    <h2 class="display text-[clamp(38px,6.4vw,80px)] text-forest">No middlemen. No hidden markups.</h2>
+    <p class="mx-auto mt-5 max-w-[46ch] text-[17px]">The price on the page is the price on the invoice. Cutting, drilling and delivery charges are shown before you order.</p>
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+      <a routerLink="/products" class="btn btn-dark">Shop best sellers</a>
+      <a routerLink="/contact" class="link">Talk to sales</a>
+    </div>
+  </div>
+  <div class="container-x mt-10 grid gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
+    @for (p of featured; track p.id) {
+      <app-product-card [product]="p" />
+    }
+  </div>
+</section>
+
+<!-- DARK CARD -->
+<section class="py-14 sm:py-20" id="trade">
+  <div class="container-x">
+    <div class="rounded-[28px] bg-forest px-5 py-12 text-center text-paper sm:px-14 sm:py-16">
+      <div class="mx-auto mb-5 grid size-11 place-items-center rounded-full bg-spruce text-gold"><app-icon name="factory" /></div>
+      <h2 class="display mb-5 text-[clamp(36px,5.6vw,68px)] text-gold">Built for contractors too</h2>
+      <p class="mx-auto mb-6 max-w-[52ch] text-[17px] text-[#dfe7d6]">
+        Open a trade account for 30-day credit terms, project pricing and a dedicated account manager. Or have us source and pack products under your own brand.
+      </p>
+      <div class="mb-7 flex flex-wrap justify-center gap-2">
+        @for (t of ['30-day credit', 'Project pricing', 'Site delivery', 'White-label packing']; track t) {
+          <span class="rounded-full bg-spruce px-3 py-1.5 text-[13px] font-semibold text-gold">{{ t }}</span>
+        }
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+        <a routerLink="/contact" class="btn btn-gold">Open a trade account</a>
+        <a routerLink="/about" fragment="white-label" class="font-medium text-gold underline underline-offset-4">How white-label works</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLASS SPLIT -->
+<section class="container-x">
+  <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-16 md:py-16">
+    <div class="overflow-hidden rounded-[28px]">
+      <img [src]="img.glassTower" alt="Glass curtain wall on a modern tower" loading="lazy" class="aspect-[4/4.4] w-full object-cover">
+    </div>
+    <div>
+      <h2 class="mb-4 text-[clamp(32px,4.2vw,56px)] font-bold leading-[1.05] tracking-[-0.025em]">Glass cut to your drawings</h2>
+      <p class="mb-6 max-w-[40ch] text-[17px]">Send us your shop drawings and we return a priced cutting list within 24 hours. Every panel is labelled by floor and opening.</p>
+      <ul class="mb-7 grid gap-3">
+        @for (point of ['Tempering, laminating and edge polishing', 'Holes, notches and hinge cut-outs', 'Crated and delivered to site']; track point) {
+          <li class="flex items-center gap-3 text-[16px]">
+            <span class="grid size-6 place-items-center rounded-full bg-forest text-gold"><app-icon name="check" [size]="14" [stroke]="3" /></span>
+            {{ point }}
+          </li>
+        }
+      </ul>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <a routerLink="/products" [queryParams]="{ category: 'glass' }" class="btn btn-gold">Shop glass</a>
+        <a routerLink="/contact" class="link">Upload drawings</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORIGINS STRIP -->
+<section aria-label="Where we source from" class="py-6">
+  <div class="flex items-center gap-4 overflow-x-auto pb-2">
+    <div class="flex shrink-0 items-center rounded-r-full bg-gold py-3 pl-[clamp(24px,8vw,120px)] pr-3">
+      <a routerLink="/about" class="grid size-16 place-items-center rounded-full bg-forest text-gold transition hover:translate-x-1" aria-label="About our sourcing">
+        <app-icon name="arrow" [size]="26" [stroke]="2.2" />
+      </a>
+    </div>
+    @for (o of company.origins; track o) {
+      <span class="shrink-0 rounded-full bg-fog px-6 py-5 text-lg font-bold tracking-[-0.02em] text-forest">{{ o }}</span>
+    }
+  </div>
+</section>
+
+<!-- DELIVERY SPLIT -->
+<section class="container-x">
+  <div class="grid items-center gap-10 py-14 md:grid-cols-2 md:gap-16 md:py-20">
+    <div class="md:order-2 overflow-hidden rounded-[28px]">
+      <img [src]="img.siteCrane" alt="Tower crane over a construction site" loading="lazy" class="aspect-[4/4.4] w-full object-cover">
+    </div>
+    <div>
+      <h2 class="mb-4 text-[clamp(32px,4.2vw,56px)] font-bold leading-[1.05] tracking-[-0.025em]">Stocked in Riyadh. On site across the Kingdom.</h2>
+      <p class="mb-6 max-w-[40ch] text-[17px]">Our warehouse holds {{ company.stats[0].value }} products ready to load. Captain Cargo delivers to your site gate with a crane truck when you need one.</p>
+      <div class="mb-7 flex flex-wrap gap-2">
+        @for (city of company.cities; track city) {
+          <span class="chip">{{ city }}</span>
+        }
+      </div>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <a routerLink="/contact" class="btn btn-gold">Book a delivery</a>
+        <a routerLink="/about" class="link">About our warehouse</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="bg-fog py-14">
+  <div class="container-x grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+    @for (s of company.stats; track s.label) {
+      <div>
+        <p class="text-[clamp(40px,5vw,61px)] font-black leading-none tracking-[-0.045em] text-forest tabular-nums">{{ s.value }}</p>
+        <p class="mt-2 text-sm font-medium text-slate">{{ s.label }}</p>
+      </div>
+    }
+  </div>
+</section>

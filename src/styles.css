@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+/*
+  Design tokens (Wise-style system with the Captain logo gold as the accent).
+  To switch the accent back to the reference lime, change --color-gold to #9fe870
+  and --color-gold-soft to #e2f6d5.
+*/
+@theme {
+  --color-forest: #163300;
+  --color-spruce: #054d28;
+  --color-gold: #ffdd00;
+  --color-gold-deep: #e6c200;
+  --color-gold-soft: #fff6c2;
+  --color-charcoal: #454745;
+  --color-obsidian: #0e0f0c;
+  --color-pebble: #868685;
+  --color-slate: #6a6c6a;
+  --color-fog: #e8ebe6;
+  --color-paper: #ffffff;
+  --color-alarm: #cb272f;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --radius-card: 10px;
+  --radius-panel: 28px;
+
+  --shadow-ring: 0 0 0 1px rgba(14, 15, 12, 0.12);
+  --shadow-lift: 0 6px 20px 0 rgba(0, 0, 0, 0.08);
+  --shadow-float: 0 10px 32px 0 rgba(0, 0, 0, 0.15), 0 40px 40px 0 rgba(0, 0, 0, 0.04);
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-paper text-charcoal antialiased;
+    font-size: 18px;
+    line-height: 1.5;
+    letter-spacing: -0.007em;
+    font-feature-settings: "calt";
+  }
+  h1, h2, h3, h4 { @apply text-obsidian; text-wrap: balance; }
+  :focus-visible { outline: 2px solid var(--color-forest); outline-offset: 3px; border-radius: 6px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-10; }
+
+  /* Massive block display type (Wise Sans substitute: Inter 900, tight tracking) */
+  .display { font-weight: 900; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.85; }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-[11px] text-base font-medium no-underline transition cursor-pointer;
+    letter-spacing: -0.006em;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-gold { @apply bg-gold text-forest hover:bg-gold-deep; }
+  .btn-dark { @apply bg-forest text-gold hover:bg-spruce; }
+  .btn-outline { @apply bg-paper text-forest; box-shadow: inset 0 0 0 1px var(--color-forest); }
+  .btn-outline:hover { @apply bg-gold-soft; }
+  .btn-sm { @apply px-4 py-2 text-sm; }
+
+  .link { @apply font-medium text-forest underline underline-offset-4 decoration-1 hover:decoration-2; }
+
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full bg-fog px-3 py-1.5 text-xs font-semibold text-forest; }
+  .tag  { @apply inline-flex items-center rounded-full bg-gold-soft px-3 py-1 text-xs font-medium text-forest; }
+
+  .input {
+    @apply w-full rounded-[10px] border border-pebble bg-paper px-4 py-3 text-base text-obsidian outline-none placeholder:text-pebble;
+  }
+  .input:focus { border-color: var(--color-forest); }
+
+  .icon-ring { @apply grid size-10 place-items-center rounded-full text-forest; box-shadow: var(--shadow-ring); }
+}
